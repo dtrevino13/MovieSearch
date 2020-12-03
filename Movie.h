@@ -11,11 +11,14 @@ class Movie{
     string year;
     string id;
 public:
+    Movie();
     Movie(string t, string g, string y, string i);
     string getTitle();
     string getYear();
     string getGenre();
+    string getId();
 };
+Movie::Movie() {}
 
 Movie::Movie(string t, string g, string y, string i) {
     title = t;
@@ -34,6 +37,10 @@ string Movie::getYear() {
 
 string Movie::getGenre() {
     return genre;
+}
+
+string Movie::getId() {
+    return id;
 }
 
 #endif //ULTIMATEMOVIESEARCH_MOVIE_H
