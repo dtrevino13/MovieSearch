@@ -43,7 +43,7 @@ void storeMovies(unordered_map<string,vector<Movie>>& titles,unordered_map<strin
             getline(stream,genre,',');
             if(genre=="\\N")
                 genre="unknown";
-            if(type=="movie" || type=="short" || type=="video") {
+            if(type=="movie" || type=="short") {
                 titles[title].push_back(Movie(title, genre, year, ID));
                 genres[genre].push_back(Movie(title, genre, year, ID));
                 years[year].push_back(Movie(title, genre, year, ID));
