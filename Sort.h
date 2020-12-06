@@ -34,4 +34,52 @@ void quickSort(vector<Movie>& arr, int left, int right)
         quickSort(arr, i, right);
 }
 
+//------------Sort using MergeSort------
+
+
+vector<Movie> merge(vector<Movie> leftArr,vector<Movie> rightArr){
+    vector<Movie> sortedArr;
+    while((int)leftArr.size()>0 && (int)rightArr.size()>0){
+        if(leftArr.front().getTitle() <= rightArr.front().getTitle()){
+            sortedArr.push_back(leftArr.front());
+            leftArr.erase(leftArr.begin());
+        }else{
+            sortedArr.push_back(rightArr.front());
+            rightArr.erase(rightArr.begin());
+        }
+    }
+
+    while((int)leftArr.size()>0){
+        sortedArr.push_back(leftArr.front());
+        leftArr.erase(leftArr.begin());
+    }
+    while((int)rightArr.size()>0){
+        sortedArr.push_back(rightArr.front());
+        rightArr.erase(rightArr.begin());
+    }
+    return sortedArr;
+
+}
+
+//this bottom one is the one you call but it returns a completely new vector with the movies sorted didn't know how to modify it in place 
+vector<Movie> mergeSort(vector<Movie> arr){
+    if(arr.size()<2)
+        return arr;
+    vector<Movie> leftArr,rightArr, sortedArr;
+
+    int mid=((int)arr.size()+1)/2;
+
+    for(int i=0;i<mid;i++)
+        leftArr.push_back(arr[i]);
+    for(int j=mid;j<arr.size();j++)
+        rightArr.push_back(arr[j]);
+
+    leftArr=mergeSort(leftArr);
+    rightArr=mergeSort(rightArr);
+    sortedArr = merge(leftArr,rightArr);
+    return sortedArr;
+
+
+}
+
 #endif //ULTIMATEMOVIESEARCH_SORT_H
