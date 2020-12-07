@@ -1,30 +1,23 @@
-//unfinished: We need to implement the search functionality in state 1 (the search screen).
-#include <SFML/Graphics.hpp>
-#include <string>
-#include <vector>
-#include "Button.h"
+#include <iostream>
 #include "Movie.h"
-using std::string;
-using std::vector;
-void DrawMovies(vector<Movie>& movies, int offset, sf::RenderWindow& window) {
-    sf::Font font;
-    font.loadFromFile("Font/Roboto-Black.ttf");
-    sf::Text text;
-    
-    text.setFont(font);
-    text.setCharacterSize(17);
-    text.setFillColor(sf::Color::Black);
-    for (int i = 0; i < 10; i++) {
-        if (i + offset == movies.size())
-            break;
-        Movie currMovie = movies[offset + i];
-        text.setString(currMovie.getTitle() + ", " + currMovie.getYear() + ", " + currMovie.getGenre());
-        text.setPosition(sf::Vector2f(50, 100 + 20 * i));
-        window.draw(text);
-    }
-}
-int main()
-{
+#include "Search.h"
+#include "Sort.h"
+#include "Store.h"
+#include "Button.h"
+#include "Graphics.h"
+#include <map>
+#include <unordered_map>
+#include <SFML/Graphics.hpp>
+
+using namespace std;
+
+int main() {
+    //store info from database
+    unordered_map<string,vector<Movie>> titles;
+    unordered_map<string,vector<Movie>> genres;
+    unordered_map<string,vector<Movie>> years;
+    storeMovies(titles, genres, years);
+
     sf::RenderWindow window(sf::VideoMode(800, 400), "Movie Search");
 
     sf::Font font;
@@ -118,9 +111,9 @@ int main()
     Button prevTenButton(prevTenSprite.getGlobalBounds());
     int offset = 0;
     //this vector is filled with test values. In the program, it would contain the sorted list of movies according to the search parameters.
-    vector<Movie> movies = { Movie("Transformers", "Action", "2000", "50"), Movie("Alladin", "Fantasy", "2001", "51"), Movie("Borat", "Comedy", "2005", "52"), Movie("Borat 2", "Comedy", "2020", "53"), 
-                            Movie("Once Upon a Time in Hollywood", "Drama", "2019", "54"), Movie("Avengers", "Action", "2015", "55"), Movie("Frozen", "Fantasy", "2010", "56"), Movie("Titanic", "Drama", "2000", "57"),
-                            Movie("Avatar", "Action", "2008", "58"), Movie("Pulp Fiction", "Drama", "1980", "59"), Movie("Bill and Ted's Excellent Adventure", "Comedy", "1979", "60")};
+    vector<Movie> movies = { Movie("Transformers", "Action", "2000", "50"), Movie("Alladin", "Fantasy", "2001", "51"), Movie("Borat", "Comedy", "2005", "52"), Movie("Borat 2", "Comedy", "2020", "53"),
+                             Movie("Once Upon a Time in Hollywood", "Drama", "2019", "54"), Movie("Avengers", "Action", "2015", "55"), Movie("Frozen", "Fantasy", "2010", "56"), Movie("Titanic", "Drama", "2000", "57"),
+                             Movie("Avatar", "Action", "2008", "58"), Movie("Pulp Fiction", "Drama", "1980", "59"), Movie("Bill and Ted's Excellent Adventure", "Comedy", "1979", "60")};
     vector<Movie> favoriteMovies;
 
 
@@ -228,7 +221,7 @@ int main()
             text.setPosition(95, 55);
             if (title == "") {
                 text.setString("Search Title");
-                text.setFillColor(sf::Color::Color(128, 128, 128, 128));
+                text.setFillColor(sf::Color(128, 128, 128, 128));
             }
             else {
                 text.setString(title);
@@ -241,7 +234,7 @@ int main()
             text.setPosition(533, 215);
             if (year == "") {
                 text.setString("Enter Year");
-                text.setFillColor(sf::Color::Color(128, 128, 128, 128));
+                text.setFillColor(sf::Color(128, 128, 128, 128));
             }
             else {
                 text.setString(year);
@@ -253,7 +246,7 @@ int main()
             text.setPosition(160, 215);
             if (genre == "") {
                 text.setString("Enter Genre");
-                text.setFillColor(sf::Color::Color(128, 128, 128, 128));
+                text.setFillColor(sf::Color(128, 128, 128, 128));
             }
             else {
                 text.setString(genre);
@@ -267,37 +260,48 @@ int main()
             if (searchButton.Contains(Clicked)) {
                 if (title != "" && genre == "" && year == "") {
                     searched = true;
-                    //movies = movies.sortbytitle()
+                    movies = searchTitle(title, titles);
                 }
                 if (title != "" && genre != "" && year == "") {
                     searched = true;
+                    movies = searchTG(title,genre,titles);
                     //movies = movies.sortby genre,title()
                 }
                 if (title != "" && genre != "" && year != "") {
                     searched = true;
+                    movies = searchTYG(title,year,genre,titles);
                     //movies = movies.sortby title,genre,year()
                 }
                 if (title != "" && genre == "" && year != "") {
                     searched = true;
+                    movies = searchTY(title,year,titles);
                     //movies = moves.sortby title, year()
                 }
                 if (title == "" && genre != "" && year != "") {
                     searched = true;
+                    movies = searchYG(year,genre,years);
                     //movies = movies.sortby genre,year()
                 }
                 if (title == "" && genre != "" && year == "") {
                     searched = true;
+                    movies = searchGenre(genre, genres);
                     //movies = movies.sortby genre()
                 }
                 if (title == "" && genre == "" && year != "") {
                     searched = true;
+                    movies = searchYear(year,years);
                     //movies = movies.sortby year()
                 }
                 if (title == "" && genre == "" && year == "") {
                     searched = false;
                 }
-                if(searched)
+                if(searched){
                     state = 2;
+                    if(quickSort.clicked)
+                        quickSortFunc(movies,0,movies.size()-1);
+                    if(mergeSort.clicked)
+                        movies = mergeSortFunc(movies);
+                }
             }
             if (titleSearchButton.Contains(Clicked)) {
                 enterTitle = true;
@@ -328,7 +332,7 @@ int main()
             text.setPosition(250, 50);
             text.setString("Search Results");
             window.draw(text);
-            
+
             for (int i = 0; i < 10; i++) {
                 if (i + offset == movies.size())
                     break;
@@ -340,7 +344,7 @@ int main()
                 offset = 0;
             }
             DrawMovies(movies, offset, window);
-            if (nextTenButton.Contains(Clicked) && (offset + 10) < movies.size()) 
+            if (nextTenButton.Contains(Clicked) && (offset + 10) < movies.size())
                 offset += 10;
             if (prevTenButton.Contains(Clicked) && (offset >= 10))
                 offset -= 10;
@@ -357,7 +361,7 @@ int main()
                     favoriteMovies.push_back(currMovie);
             }
         }
-        
+
         window.display();
     }
 
