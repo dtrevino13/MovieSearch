@@ -1,3 +1,7 @@
+/*Currently Unfinished. Everything works, but I haven't included the searching and sorting files and used them. The program would usually set the "movies" vector to the "sorted"
+vector of movies according to the search parameters.
+*/
+
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
@@ -5,7 +9,7 @@
 #include "Movie.h"
 using std::string;
 using std::vector;
-void DrawMovies(vector<Movie> movies, int offset, sf::RenderWindow& window) {
+void DrawMovies(vector<Movie>& movies, int offset, sf::RenderWindow& window) {
     sf::Font font;
     font.loadFromFile("Font/Roboto-Black.ttf");
     sf::Text text;
