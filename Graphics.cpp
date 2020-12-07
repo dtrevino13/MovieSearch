@@ -108,6 +108,7 @@ int main()
     string genre = "";
     string title = "";
     string year = "";
+    bool searched = false;
     bool enterTitle = false;
     bool enterYear = false;
     bool enterGenre = false;
@@ -264,16 +265,39 @@ int main()
                 state = 2;
             }
             if (searchButton.Contains(Clicked)) {
-                if (title != "") {
+                if (title != "" && genre == "" && year == "") {
+                    searched = true;
                     //movies = movies.sortbytitle()
                 }
-                if (genre != "") {
-                    //movies = movies.sortbygenre()
+                if (title != "" && genre != "" && year == "") {
+                    searched = true;
+                    //movies = movies.sortby genre,title()
                 }
-                if (year != "") {
-                    //movies = movies.sortbyYear()
+                if (title != "" && genre != "" && year != "") {
+                    searched = true;
+                    //movies = movies.sortby title,genre,year()
                 }
-                state = 2;
+                if (title != "" && genre == "" && year != "") {
+                    searched = true;
+                    //movies = moves.sortby title, year()
+                }
+                if (title == "" && genre != "" && year != "") {
+                    searched = true;
+                    //movies = movies.sortby genre,year()
+                }
+                if (title == "" && genre != "" && year == "") {
+                    searched = true;
+                    //movies = movies.sortby genre()
+                }
+                if (title == "" && genre == "" && year != "") {
+                    searched = true;
+                    //movies = movies.sortby year()
+                }
+                if (title == "" && genre == "" && year == "") {
+                    searched = false;
+                }
+                if(searched)
+                    state = 2;
             }
             if (titleSearchButton.Contains(Clicked)) {
                 enterTitle = true;
