@@ -1,7 +1,4 @@
-/*Currently Unfinished. Everything works, but I haven't included the searching and sorting files and used them. The program would usually set the "movies" vector to the "sorted"
-vector of movies according to the search parameters.
-*/
-
+//unfinished: We need to implement the search functionality in state 1 (the search screen).
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <vector>
@@ -267,7 +264,15 @@ int main()
                 state = 2;
             }
             if (searchButton.Contains(Clicked)) {
-                //filter the results into a vector
+                if (title != "") {
+                    //movies = movies.sortbytitle()
+                }
+                if (genre != "") {
+                    //movies = movies.sortbygenre()
+                }
+                if (year != "") {
+                    //movies = movies.sortbyYear()
+                }
                 state = 2;
             }
             if (titleSearchButton.Contains(Clicked)) {
@@ -292,6 +297,13 @@ int main()
             window.draw(startOverSprite);
             window.draw(nextTenSprite);
             window.draw(prevTenSprite);
+
+            text.setCharacterSize(35);
+            text.setFillColor(sf::Color::Black);
+            text.setStyle(sf::Text::Regular);
+            text.setPosition(250, 50);
+            text.setString("Search Results");
+            window.draw(text);
             
             for (int i = 0; i < 10; i++) {
                 if (i + offset == movies.size())
