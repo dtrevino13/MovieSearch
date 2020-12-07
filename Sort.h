@@ -6,7 +6,7 @@
 #include <vector>
 using namespace std;
 
-void quickSort(vector<Movie>& arr, int left, int right)
+void quickSortFunc(vector<Movie>& arr, int left, int right)
 {
     int i = left, j = right;
     Movie temp;
@@ -29,9 +29,9 @@ void quickSort(vector<Movie>& arr, int left, int right)
 
     //recursion
     if (left < j)
-        quickSort(arr, left, j);
+        quickSortFunc(arr, left, j);
     if (i < right)
-        quickSort(arr, i, right);
+        quickSortFunc(arr, i, right);
 }
 
 //------------Sort using MergeSort------
@@ -61,8 +61,8 @@ vector<Movie> merge(vector<Movie> leftArr,vector<Movie> rightArr){
 
 }
 
-//this bottom one is the one you call but it returns a completely new vector with the movies sorted didn't know how to modify it in place 
-vector<Movie> mergeSort(vector<Movie> arr){
+//this bottom one is the one you call but it returns a completely new vector with the movies sorted didn't know how to modify it in place
+vector<Movie> mergeSortFunc(vector<Movie> arr){
     if(arr.size()<2)
         return arr;
     vector<Movie> leftArr,rightArr, sortedArr;
@@ -74,8 +74,8 @@ vector<Movie> mergeSort(vector<Movie> arr){
     for(int j=mid;j<arr.size();j++)
         rightArr.push_back(arr[j]);
 
-    leftArr=mergeSort(leftArr);
-    rightArr=mergeSort(rightArr);
+    leftArr=mergeSortFunc(leftArr);
+    rightArr=mergeSortFunc(rightArr);
     sortedArr = merge(leftArr,rightArr);
     return sortedArr;
 
